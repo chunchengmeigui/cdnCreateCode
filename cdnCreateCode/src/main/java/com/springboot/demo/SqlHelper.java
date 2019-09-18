@@ -55,7 +55,16 @@ public class SqlHelper {
             //从元数据中获取到所有的表名
             rs = db.getTables(conn.getCatalog(), "%", "%", new String[]{"TABLE"});
             while (rs.next()) {
+                System.out.println(rs.getString(1));
+                System.out.println(rs.getString(2));
                 System.out.println(rs.getString(3));
+                System.out.println(rs.getString(4));
+                System.out.println(rs.getString(5));
+
+
+
+
+
                 tableNames.add(rs.getString(3));
             }
             System.out.println("##############共计" + tableNames.size() + "个表=################");
@@ -362,9 +371,9 @@ public class SqlHelper {
         String PROVIDER_Delete = Model.PROVIDER_Delete; //删除
         String PROVIDER_Update = Model.PROVIDER_Update; //更新
         String PROVIDER_Find = Model.PROVIDER_Find; //查询
-        String PROVIDER_FindSingle = Model.PROVIDER_FindSingle; //查询
+        String PROVIDER_FindSingle = Model.PROVIDER_FindSingle; //查询单条
         String PROVIDER_LIKE = Model.PROVIDER_LIKE; //模糊查询sql语句
-        String PROVIDER_CommonMethods = Model.PROVIDER_CommonMethods; //查询单条
+        String PROVIDER_CommonMethods = Model.PROVIDER_CommonMethods; //公共方法
         boolean isPrimaryKey = false;
         String entityName = initcap(lineToHump(tableName));//实体类名称
         providerCommonPart = providerCommonPart.replaceAll("com.springboot.demo", this.mainPackageOutPath);
@@ -514,7 +523,7 @@ public class SqlHelper {
 
         for (int i = 0; i < colnames.length; i++) {
             sb.append("\tpublic void set" + initcap(lineToHump(colnames[i])) + "(" + sqlType2JavaType(colTypes[i]) + " "
-                    + colnames[i] + "){\r\n");
+                    + lineToHump(colnames[i]) + "){\r\n");
             sb.append("\tthis." + lineToHump(colnames[i]) + "=" + lineToHump(colnames[i]) + ";\r\n");
             sb.append("\t}\r\n");
             sb.append("\tpublic " + sqlType2JavaType(colTypes[i]) + " get" + initcap(lineToHump(colnames[i])) + "(){\r\n");
@@ -657,7 +666,7 @@ public class SqlHelper {
      * @param args
      */
     public static void main(String[] args) {
-        new SqlHelper("localhost/urp", "root", "root", "com.springboot.demo");
+        new SqlHelper("localhost/caidingnu", "root", "root", "com.springboot.demo");
     }
 
 }
