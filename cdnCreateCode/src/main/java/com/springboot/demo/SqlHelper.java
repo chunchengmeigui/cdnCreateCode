@@ -650,6 +650,8 @@ public class SqlHelper {
      */
     private void processAllAttrs(StringBuffer sb, String tablename) {
         List<String> columnCommentsList = getColumnComments(tablename);
+		//        生成序列号
+        sb.append("\n" + genSerialID() + "\r\n\n");
         for (int i = 0; i < colnames.length; i++) {
             if (null != columnCommentsList.get(i) && columnCommentsList.get(i).length() > 0) {
 //                注释
@@ -672,7 +674,7 @@ public class SqlHelper {
                 }
             }
 //            属性
-            sb.append("\tprivate " + sqlType2JavaType(colTypes[i]) + " " + lineToHump(colnames[i]) + ";\r\n\n");
+            sb.append("\t@JsonProperty(\"" + lineToHump(colnames[i]) + "\")\n\tprivate " + sqlType2JavaType(colTypes[i]) + " " + lineToHump(colnames[i]) + ";\r\n\n");
         }
 
     }
@@ -792,6 +794,8 @@ public class SqlHelper {
         if (f_lang) {
             sb.append("import java.lang.*;\r\n");
         }
+		   sb.append("import java.io.Serializable;\r\n");
+		 sb.append("import com.fasterxml.jackson.annotation.JsonProperty;\r\n");
         sb.append("\r\n");
         // 注释部分
         sb.append("   /**\r\n");
@@ -808,6 +812,11 @@ public class SqlHelper {
         return sb.toString();
     }
 
+	  //生成实体序列号
+    public static String genSerialID() {
+        return "\tprivate static final long serialVersionUID =  " + Math.abs(new Random().nextLong()) + "L;";
+    }
+	
     /**
      * desc: 获取当前日期
      * param:
