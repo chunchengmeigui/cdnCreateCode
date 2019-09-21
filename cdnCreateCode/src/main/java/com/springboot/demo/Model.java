@@ -976,21 +976,19 @@ public class Model {
             "}\n";
 
     //    ################################# README 说明 ######################################
-    static final String README = "1 主键字段注释中加 primarykey （必须）\n" +
+     //    ################################# README 说明 ######################################
+    static final String README = "1 需要模糊查询的字段注释加 like  【可选】\n" +
             "\n" +
             "\n" +
-            "2 需要模糊查询的字段注释加 like  【可选】\n" +
+            "2 需要逻辑删除的 在字段注释加 logic [可选]\n" +
             "\n" +
-            "\n" +
-            "3 需要逻辑删除的 在字段注释加 logic [可选]\n" +
-            "\n" +
-            "4 application.yml中配置： \n" +
+            "3 application.yml中配置： \n" +
             "    # 下换线转驼峰\n" +
             "    mybatis:\n" +
             "        configuration:\n" +
             "            mapUnderscoreToCamelCase: true\n" +
             "            log-impl: org.apache.ibatis.logging.stdout.StdOutImpl\n" +
-            "            \n" +
-            "5 如果存在多个主键，请把本表的主键放在第一个顺序";
+            "\n" +
+            "4 如果存在多个主键，请把本表的主键放在第一个顺序";
 
 }
