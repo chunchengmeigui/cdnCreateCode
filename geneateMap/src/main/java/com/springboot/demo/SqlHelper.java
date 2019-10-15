@@ -671,10 +671,10 @@ public class SqlHelper {
 
 //        查找是否有逻辑删除的字段，（注释中含有logic）
         for (int i = 0; i < colnames.length; i++) {
-            if (colComments.get(i).contains("primaryKey")) {
+            if (colComments.get(i).contains("logic")) {
                 PROVIDER_logicDelete = PROVIDER_logicDelete.replaceAll("PRYKEY", colnames[i]);
                 PROVIDER_logicDelete = PROVIDER_logicDelete.replaceAll("@Attribute@", lineToHump(colnames[i]));
-            } else if (colComments.get(i).contains("logic")) {
+//            } else if (colComments.get(i).contains("logic")) {
                 PROVIDER_logicDelete = PROVIDER_logicDelete.replaceAll("STATUSXXX", colnames[i]);
                 resp = resp + PROVIDER_logicDelete;
             }
