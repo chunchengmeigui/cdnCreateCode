@@ -283,11 +283,13 @@ public class SqlHelper {
      */
     public void generateUtils(String utilsFinalPath) {
         Map<String, String> map = new HashMap<>();
-        String JsonResultContent = getJsonResultContent();
+        String jsonResultContent = getJsonResultContent();
         String StrUtilsContent = getStrUtils();
         String myException = getMyException();
-        map.put("JsonResult.java", JsonResultContent);
+        String MyExceptionHandler = getMyExceptionHandler();
+        map.put("JsonResult.java", jsonResultContent);
         map.put("MyException.java", myException);
+        map.put("MyExceptionHandler.java", MyExceptionHandler);
         map.put("StrUtils.java", StrUtilsContent);
 
         for (Map.Entry<String, String> stringStringEntry : map.entrySet()) {
@@ -348,6 +350,18 @@ public class SqlHelper {
      */
     public String getMyException() {
         String myExcepiion = Model.MyException;
+        myExcepiion = myExcepiion.replaceAll("com.springboot.demo", this.mainPackageOutPath);
+        return myExcepiion;
+    }
+    /**
+     * desc: 组织myExcepiion
+     * param:
+     * return:
+     * author: CDN
+     * date: 2019/9/14
+     */
+    public String getMyExceptionHandler() {
+        String myExcepiion = Model.EXCEPTIONHandler;
         myExcepiion = myExcepiion.replaceAll("com.springboot.demo", this.mainPackageOutPath);
         return myExcepiion;
     }

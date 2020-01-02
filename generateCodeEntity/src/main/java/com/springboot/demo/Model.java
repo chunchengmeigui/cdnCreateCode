@@ -41,7 +41,10 @@ public class Model {
             "        if (!StrUtils.isNullOrEmpty(department@@)) {\n" +
             "            sql.INSERT_INTO(tableName);\n" +
             "            for (Field field : department@@.getClass().getDeclaredFields()) {\n" +
-            "                sql.VALUES(StrUtils.camel2Underline(field.getName()), \"#{\" + field.getName() + \"}\");\n" +
+            "                   if (\"serialVersionUID\".equals(field.getName())){\n" +
+            "                            continue;\n" +
+            "                   }\n" +
+            "                   sql.VALUES(StrUtils.camel2Underline(field.getName()), \"#{\" + field.getName() + \"}\");\n" +
             "            }\n" +
             "        }\n" +
             "        return sql.toString();\n" +
@@ -59,7 +62,7 @@ public class Model {
             "        if (!StrUtils.isNullOrEmpty(map)) {\n" +
             "            sql.DELETE_FROM(tableName);\n" +
             "            for (Map.Entry<String, Object> stringObjectEntry : map.entrySet()) {\n" +
-            "                sql.WHERE(stringObjectEntry.getKey()+\"=\"+stringObjectEntry.getValue());\n" +
+            "                sql.WHERE(StrUtils.camel2Underline(stringObjectEntry.getKey())+\"='\"+stringObjectEntry.getValue()+\"'\");\n" +
             "            }\n" +
             "        }\n" +
             "        return sql.toString();\n" +
@@ -974,9 +977,54 @@ public class Model {
             "    }\n" +
             "\n" +
             "}\n";
-
+static  final  String EXCEPTIONHandler="package com.springboot.demo.utils;\n" +
+        "\n" +
+        "import org.springframework.dao.DataAccessException;\n" +
+        "import org.springframework.web.bind.annotation.ControllerAdvice;\n" +
+        "import org.springframework.web.bind.annotation.ExceptionHandler;\n" +
+        "import org.springframework.web.bind.annotation.ResponseBody;\n" +
+        "import org.springframework.web.multipart.MaxUploadSizeExceededException;\n" +
+        "\n" +
+        "import java.io.FileNotFoundException;\n" +
+        "import java.util.HashMap;\n" +
+        "\n" +
+        "@ControllerAdvice\n" +
+        "public class MyExceptionHandler {\n" +
+        "    @ExceptionHandler(value = Exception.class)\n" +
+        "    @ResponseBody\n" +
+        "    public HashMap Handler(Exception e) {\n" +
+        "        HashMap resMap;\n" +
+        "        if (e instanceof MyException ) {\n" +
+        "            MyException xdException = (MyException) e;\n" +
+        "            resMap = new HashMap();\n" +
+        "            resMap.put(\"code\", xdException.getCode());\n" +
+        "            resMap.put(\"msg\", e.getMessage());\n" +
+        "            return resMap;\n" +
+        "        } else if (e instanceof DataAccessException) {\n" +
+        "            resMap = new HashMap();\n" +
+        "            resMap.put(\"code\", \"98\");\n" +
+        "            resMap.put(\"msg\", e.getMessage());\n" +
+        "            return resMap;\n" +
+        "        } else if (e instanceof MaxUploadSizeExceededException) {\n" +
+        "            resMap = new HashMap();\n" +
+        "            resMap.put(\"code\", \"98\");\n" +
+        "            resMap.put(\"msg\", \"文件超过20MB！\");\n" +
+        "            return resMap;\n" +
+        "        } else if (e instanceof FileNotFoundException) {\n" +
+        "            resMap = new HashMap();\n" +
+        "            resMap.put(\"code\", \"98\");\n" +
+        "            resMap.put(\"msg\", \"文件不存在！\");\n" +
+        "            return resMap;\n" +
+        "        } else {\n" +
+        "            resMap = new HashMap();\n" +
+        "            resMap.put(\"code\", \"99\");\n" +
+        "            resMap.put(\"msg\", e);\n" +
+        "            return resMap;\n" +
+        "        }\n" +
+        "    }\n" +
+        "\n" +
+        "}\n";
     //    ################################# README 说明 ######################################
-     //    ################################# README 说明 ######################################
     static final String README = "1 需要模糊查询的字段注释加 like  【可选】\n" +
             "\n" +
             "\n" +
