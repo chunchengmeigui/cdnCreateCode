@@ -98,15 +98,15 @@ public class SqlHelper {
      * @author yuyu
      */
     public static String[] getPrimaryKey(String table, Connection conn) {
-        URL = "jdbc:mysql://localhost/spring?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC";
-        NAME = "root";
-        PASS = "root";
+        URL = "jdbc:mysql://localhost/"+"menu"+"?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC";
+//        NAME = "root";
+//        PASS = "root";
         try {
             conn = DriverManager.getConnection(URL, NAME, PASS);
         } catch (SQLException e) {
             System.out.println("---------");
         }
-        String sql = "SHOW CREATE TABLE " + "menu";
+        String sql = "SHOW CREATE TABLE " + table;
         try {
 
             PreparedStatement pre = conn.prepareStatement(sql);
@@ -367,6 +367,7 @@ public class SqlHelper {
         Controller_before = Controller_before.replaceAll("com.springboot.demo", this.mainPackageOutPath);
         Controller_before = Controller_before.replaceAll("ENTITYNAMEXXX", initcap(lineToHump(tableName)));
         Controller_before = Controller_before.replaceAll("TABLENAME_CDN", lineToHump(tableName));
+        Controller_LogicDelete = Controller_LogicDelete.replaceAll("TABLENAME_CDN", lineToHump(tableName));
 
         //        查找是否有逻辑删除的字段，（注释中含有logic）
         Controller_before = logicDelete(Controller_before, Controller_LogicDelete, "logic") + Controller_End;
@@ -448,6 +449,7 @@ public class SqlHelper {
         String Mapper_logicEnd = Model.MAPPER_END;
         MAPPER_before = MAPPER_before.replaceAll("com.springboot.demo", this.mainPackageOutPath);
         MAPPER_before = MAPPER_before.replaceAll("ENTITYNAMEXXX", initcap(lineToHump(tableName)));
+        Mapper_logicDelete = Mapper_logicDelete.replaceAll("ENTITYNAMEXXX", initcap(lineToHump(tableName)));
         MAPPER_before = MAPPER_before.replaceAll("TIMECDNXX", getNowTime());
         //        查找是否有逻辑删除的字段，（注释中含有logic）
         MAPPER_before = logicDelete(MAPPER_before, Mapper_logicDelete, "logic") + Mapper_logicEnd;
@@ -836,7 +838,7 @@ public class SqlHelper {
      * @param args
      */
     public static void main(String[] args) throws SQLException {
-        new SqlHelper("localhost/spring", "root", "root", "com.springboot.demo");
+        new SqlHelper("localhost/menu", "root", "12345678", "com.springboot.demo");
 
     }
 

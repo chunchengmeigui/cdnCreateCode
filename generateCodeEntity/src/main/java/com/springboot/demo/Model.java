@@ -241,7 +241,7 @@ public class Model {
             "    ENTITYNAMEXXX findSingle(Map<String, Object> map);\n";
 
     static final String MAPPER_LogicDelete = "\n" +
-            "    @UpdateProvider(type = MenuProvider.class, method = \"logicDelete\")\n" +
+            "    @UpdateProvider(type = ENTITYNAMEXXXProvider.class, method = \"logicDelete\")\n" +
             "    int logicDelete(Map<String, Object> map);\n";
 
     static final String MAPPER_END = "}\n";
@@ -361,7 +361,7 @@ public class Model {
             "\n" +
             "    @Override\n" +
             "    public int deleteLogic(Map<String, Object> map) {\n" +
-            "        if (\"\".equals(map.get(\"menuId\")) || null == map.get(\"primaryKeyXX\")) {\n" +
+            "        if (\"\".equals(map.get(\"primaryKeyXX\")) || null == map.get(\"primaryKeyXX\")) {\n" +
             "            throw new MyException(\"主键不能为空！\");\n" +
             "        }\n" +
             "        return ##XXXX##Mapper.logicDelete(map);\n" +
@@ -473,7 +473,7 @@ public class Model {
             "     */\n" +
             "    @RequestMapping(\"deleteLogic\")\n" +
             "    public JsonResult deleteLogic(@RequestBody Map<String, Object> map) {\n" +
-            "        return JsonResult.buildSuccess(menuService.deleteLogic(map));\n" +
+            "        return JsonResult.buildSuccess(TABLENAME_CDNService.deleteLogic(map));\n" +
             "    }\n";
 
     static final String Controller_End = "}\n";
