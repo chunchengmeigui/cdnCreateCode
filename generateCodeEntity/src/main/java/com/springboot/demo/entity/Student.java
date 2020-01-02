@@ -6,14 +6,14 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
    /**
-    * @ time：2020-01-02 14:00:03
+    * @ time：2020-01-02 14:06:24
     * @ author：CDN 
     * @ desc：student 实体类
     */ 
 
-public class Student{
+public class Student  implements  Serializable{
 
-	private static final long serialVersionUID =  5401395229437011196L;
+	private static final long serialVersionUID =  4728880777620803479L;
 
 	@JsonProperty("stuId")
 	private Integer stuId;

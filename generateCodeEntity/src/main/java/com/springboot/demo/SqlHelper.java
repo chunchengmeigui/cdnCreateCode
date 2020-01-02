@@ -813,7 +813,7 @@ public class SqlHelper {
         sb.append("    * @ desc：" + tablename + " 实体类\r\n");
         sb.append("    */ \r\n");
         // 实体部分
-        sb.append("\r\npublic class " + initcap(lineToHump(tablename)) + "{\r\n");
+        sb.append("\r\npublic class " + initcap(lineToHump(tablename)) +"  implements  Serializable"+ "{\r\n");
         processAllAttrs(sb, tablename);// 属性
         processAllMethod(sb);// get set方法
         sb.append("}\r\n");
@@ -844,7 +844,7 @@ public class SqlHelper {
      *
      * @param args
      */
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         new SqlHelper("localhost/menu", "root", "12345678", "com.springboot.demo");
 
     }
