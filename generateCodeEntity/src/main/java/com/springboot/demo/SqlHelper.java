@@ -94,7 +94,6 @@ public class SqlHelper {
      *
      * @param table 数据库中的表名
      * @return 执行成功返回一个主键名的字符数组，否则返回null或抛出一个异常
-     * @throws 抛出sql执行异常
      * @author yuyu
      */
     public static String[] getPrimaryKey(String table, Connection conn) {
@@ -253,7 +252,7 @@ public class SqlHelper {
                 if (primaryKeyExist) {
                     String entityContent = createEntity(tablename);
                     String mapperContent = getMapperContent(tablename, colnames, colTypes);
-                    String providerContent = getProviderContent(tablename);
+                    String providerContent = getProviderContent(tablename,primaryKeyName);
                     String serviceContent = getServiceContent(tablename);
                     String serviceImplContent = getServiceImpl(tablename, primaryKeyName, primaryKeyType);
                     String controllerContent = getControllerContent(tablename, primaryKeyName, primaryKeyType);
@@ -481,7 +480,7 @@ public class SqlHelper {
      * @param tableName 表名
      * @return
      */
-    private String getProviderContent(String tableName) {
+    private String getProviderContent(String tableName,String primaryKeyName) {
         String providerCommonPart = Model.PROVIDER_CommonPart; //公共部分
         String PROVIDER_Insert = Model.PROVIDER_Insert; //新增
         String PROVIDER_Delete = Model.PROVIDER_Delete; //删除
@@ -489,7 +488,7 @@ public class SqlHelper {
 
 
         String PROVIDER_Find = Model.PROVIDER_Find; //查询
-        String PROVIDER_Find_status = Model.PROVIDER_Find_status;
+        String PROVIDER_Find_logic = Model.PROVIDER_Find_Logic;
         String PROVIDER_Find_end = Model.PROVIDER_Find_end;
 
         String PROVIDER_FindSingle = Model.PROVIDER_FindSingle; //查询
@@ -511,11 +510,11 @@ public class SqlHelper {
         PROVIDER_Update = PROVIDER_Update.replaceAll("DepartmentXX", entityName);
         PROVIDER_Update = PROVIDER_Update.replaceAll("department@@", lineToHump(tableName));
         for (int i = 0; i < colnames.length; i++) {
-            if (colComments.get(i).contains("primaryKey")) {
+//            if (colComments.get(i).contains("primaryKey")) {
                 PROVIDER_Update = PROVIDER_Update.replaceAll("PRYKEY", colnames[i]);
                 PROVIDER_Update = PROVIDER_Update.replaceAll("@Attribute@", lineToHump(colnames[i]));
                 isPrimaryKey = true;
-            }
+//            }
         }
 
 
@@ -525,9 +524,14 @@ public class SqlHelper {
         StringBuilder before = new StringBuilder(PROVIDER_Find.substring(0, startINdex));
         String middle = PROVIDER_Find.substring(startINdex, endIndex);
         String bottom = PROVIDER_Find.substring(endIndex, PROVIDER_Find.length());
+        String logicDelName="";
         for (int i = 0; i < colnames.length; i++) {
 
 //            如果注释中包含like就拼接为模糊查询，否则就是 = 查询
+            if (colComments.get(i).contains("logic")) {
+                logicDelName=colnames[i];
+                continue;
+            }
             if (colComments.get(i).contains("like")) {
                 String like2 = PROVIDER_LIKE.replaceAll("XXXXX", lineToHump(colnames[i]));
                 String like3 = like2.replaceAll("TTTT", colnames[i]);
@@ -540,9 +544,11 @@ public class SqlHelper {
         }
 
 //        find 中判断是否有逻辑删除字段
-        String tempBefore = logicDelete(before.toString(), PROVIDER_Find_status, "logic");
+        String tempBefore = logicDelete(before.toString(), PROVIDER_Find_logic, "logic");
         if (!before.equals(tempBefore)) {
             before.delete(0, before.length());
+            System.out.println(tempBefore.contains("LOGICXXXX"));
+            tempBefore=  tempBefore.replaceAll("LOGICXXXX",logicDelName);
             before.append(tempBefore);
         }
 //      find 拼接尾部
@@ -551,20 +557,21 @@ public class SqlHelper {
 
 //        根据主键查询，在主键注释中加 primaryKey [查询单条]
         for (int i = 0; i < colnames.length; i++) {
-            if (colComments.get(i).contains("primaryKey")) {
-                PROVIDER_FindSingle = PROVIDER_FindSingle.replaceAll("KEY", lineToHump(colnames[i]));
-                PROVIDER_FindSingle = PROVIDER_FindSingle.replaceAll("##attribute##", colnames[i]);
+//            if (colComments.get(i).contains("primaryKey")) {
+                PROVIDER_FindSingle = PROVIDER_FindSingle.replaceAll("KEY",  colnames[i]);
+                PROVIDER_FindSingle = PROVIDER_FindSingle.replaceAll("##attribute##",lineToHump(colnames[i]));
                 isPrimaryKey = true;
-            }
+//            }
         }
         String resp = providerCommonPart + PROVIDER_Insert + PROVIDER_Delete;
 
 //        查找是否有逻辑删除的字段，（注释中含有logic）
         for (int i = 0; i < colnames.length; i++) {
-            if (colComments.get(i).contains("primaryKey")) {
+//            if (colComments.get(i).contains("primaryKey")) {
                 PROVIDER_logicDelete = PROVIDER_logicDelete.replaceAll("PRYKEY", colnames[i]);
                 PROVIDER_logicDelete = PROVIDER_logicDelete.replaceAll("@Attribute@", lineToHump(colnames[i]));
-            } else if (colComments.get(i).contains("logic")) {
+//            } else
+                if (colComments.get(i).contains("logic")) {
                 PROVIDER_logicDelete = PROVIDER_logicDelete.replaceAll("STATUSXXX", colnames[i]);
                 resp = resp + PROVIDER_logicDelete;
             }

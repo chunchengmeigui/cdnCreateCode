@@ -123,7 +123,7 @@ public class Model {
             "                sql.WHERE(\"TTTT like concat('%',#{XXXXX},'%')\");\n" +
             "            }\n\t\t";
 
-    static final String PROVIDER_Find_status = " sql.WHERE(\"status=1\");\n";
+    static final String PROVIDER_Find_Logic = " sql.WHERE(\"LOGICXXXX=1\");\n";
 
     static final String PROVIDER_Find_end = "        }\n        return sql.toString();\n";
 

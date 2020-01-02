@@ -107,7 +107,7 @@ public class TeacherProvider {
     public String findSingle(Map<String, Object> map) {
         SQL sql = new SQL().SELECT("*").FROM(tableName);
         if (!StrUtils.isNullOrEmpty(map)) {
-            sql.WHERE("tecId=#{tec_id}");
+            sql.WHERE("tec_id=#{tecId}");
         }
         return sql.toString();
     }

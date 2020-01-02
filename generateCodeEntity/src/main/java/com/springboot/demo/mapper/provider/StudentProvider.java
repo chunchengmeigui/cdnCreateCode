@@ -112,9 +112,7 @@ public class StudentProvider {
             if (!StrUtils.isNullOrEmpty(map.get("createTime"))) {
                 sql.WHERE("create_time=#{createTime}");
             }
-            if (!StrUtils.isNullOrEmpty(map.get("valid"))) {
-                sql.WHERE("valid=#{valid}");
-            }
+            sql.WHERE("valid=1");
         }
         return sql.toString();
     }
@@ -128,7 +126,7 @@ public class StudentProvider {
     public String findSingle(Map<String, Object> map) {
         SQL sql = new SQL().SELECT("*").FROM(tableName);
         if (!StrUtils.isNullOrEmpty(map)) {
-            sql.WHERE("stuId=#{stu_id}");
+            sql.WHERE("stu_id=#{stuId}");
         }
         return sql.toString();
     }
